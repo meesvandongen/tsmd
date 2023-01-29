@@ -1,16 +1,16 @@
 import { FunctionProp, PropKind } from "@structured-types/api";
 
 export function validateFunctionProp(functionItem: FunctionProp) {
-  if (!functionItem.parameters) {
-    return `Item ${functionItem.name} has no parameters`;
-  }
-  if (!functionItem.parameters.some((param) => param.description)) {
+  if (
+    functionItem.parameters &&
+    !functionItem.parameters.some((param) => param.description)
+  ) {
     return `Item ${functionItem.name} has no parameter description`;
   }
+
   if (!functionItem.returns) {
     return `Item ${functionItem.name} has no return type`;
   }
-
   if (
     functionItem.returns.kind !== PropKind.Void &&
     !functionItem.returns.description
