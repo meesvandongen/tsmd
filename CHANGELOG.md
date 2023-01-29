@@ -1,5 +1,11 @@
 # @mvd/tsmd
 
+## 1.0.2
+
+### Patch Changes
+
+- 19a87c7: Make sure parameters is not a requirement for validation
+
 ## 1.0.1
 
 ### Patch Changes
