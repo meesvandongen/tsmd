@@ -1,5 +1,11 @@
 # @mvd/tsmd
 
+## 1.0.3
+
+### Patch Changes
+
+- 3ee842a: Make sure no assumptions are being made about the parameters prop.
+
 ## 1.0.2
 
 ### Patch Changes
