@@ -21,13 +21,13 @@ function generalExample(funtionProp: FunctionProp) {
 import { ${funtionProp.name} } from "${globalThis.packageName}";
 
 ${funtionProp.name}(${funtionProp
-    .parameters!.map((param) => param.name)
-    .join(", ")})
+    .parameters?.map((param) => param.name)
+    .join(", ") ?? ""})
 \`\`\``;
 }
 
 function parameters(functionProp: FunctionProp) {
-  const params = functionProp.parameters!;
+  const params = functionProp.parameters ?? [];
   if (!params.length) {
     return "";
   }
@@ -49,7 +49,7 @@ function returns(functionProp: FunctionProp) {
   }
   return `### Returns
 
-(*${PropKind[returns.kind!]}*) ${returns.description}`;
+(*${PropKind[returns.kind ?? PropKind.Unknown]}*) ${returns.description}`;
 }
 
 function remarks(functionProp: FunctionProp) {
