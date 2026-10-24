@@ -1,22 +1,37 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
+  "timezone": "Europe/Amsterdam",
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "rebaseWhen": "conflicted",
+  "semanticCommits": "enabled",
   "packageRules": [
     {
-      "description": "Merge non-major updates once CI passes; majors wait for review",
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "description": "Group all non-major updates into one weekly PR and merge it once CI passes; majors wait for review",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-non-major",
       "automerge": true
+    },
+    {
+      "description": "Runtime dependency updates commit as fix(tsmd), which Tegami releases as a patch",
+      "matchDepTypes": ["dependencies"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "tsmd"
+    },
+    {
+      "description": "Keep runtime dependencies in their own group so dev-only updates don't trigger a release",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "non-major runtime dependencies",
+      "groupSlug": "runtime-non-major"
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": true,
+    "schedule": ["before 6am on the first day of the month"]
   }
 }

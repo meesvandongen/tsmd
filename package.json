@@ -9,17 +9,17 @@
   "scripts": {
     "build": "parcel build",
     "dev": "parcel watch",
-    "release": "pnpm run build && changeset version && changeset publish"
+    "tegami": "node scripts/tegami.mts"
   },
   "dependencies": {
     "@structured-types/api": "^3.46.12",
     "yargs": "^17.6.2"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.0",
     "@types/node": "^18.11.18",
     "@types/yargs": "^17.0.20",
-    "parcel": "^2.8.3"
+    "parcel": "^2.8.3",
+    "tegami": "^1.5.0"
   },
   "bin": "./index.js",
   "docs": "docs",
@@ -36,5 +36,6 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "packageManager": "pnpm@10.34.8"
 }
