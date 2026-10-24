@@ -7,8 +7,11 @@
   "module": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "parcel build",
-    "dev": "parcel watch",
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "lint": "vp lint",
+    "format": "vp fmt",
+    "format:check": "vp fmt --check",
     "release": "pnpm run build && changeset version && changeset publish"
   },
   "dependencies": {
@@ -19,7 +22,7 @@
     "@changesets/cli": "^2.26.0",
     "@types/node": "^18.11.18",
     "@types/yargs": "^17.0.20",
-    "parcel": "^2.8.3"
+    "vite-plus": "catalog:"
   },
   "bin": "./index.js",
   "docs": "docs",
@@ -36,5 +39,6 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "packageManager": "pnpm@12.15.0+sha512.b3951d6d6ff4a9f13dc7cf56cd28d2b8eb37dbcc9c68e52e1e1191873ea9f82a017287ab50baadc5ccc494f036c67c0e47eb13608c2fa36f47711b61ea128e61"
 }

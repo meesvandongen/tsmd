@@ -20,9 +20,9 @@ function generalExample(funtionProp: FunctionProp) {
   return `\`\`\`ts
 import { ${funtionProp.name} } from "${globalThis.packageName}";
 
-${funtionProp.name}(${funtionProp
-    .parameters?.map((param) => param.name)
-    .join(", ") ?? ""})
+${funtionProp.name}(${
+    funtionProp.parameters?.map((param) => param.name).join(", ") ?? ""
+  })
 \`\`\``;
 }
 
