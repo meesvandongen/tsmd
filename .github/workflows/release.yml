@@ -3,8 +3,9 @@ name: Release
 # Versions and publishes on every push to main, without a Version Packages PR:
 # 1. `tegami version` reads conventional commits since the last release tag.
 #    Only `feat(tsmd)` / `fix(tsmd)` style commits (scope = package name)
-#    count, so Renovate's grouped runtime-dependency PR (`fix(tsmd): ...`)
-#    releases a patch and `chore(deps)` updates release nothing.
+#    count. The shared Renovate preset commits updates that include a runtime
+#    dependency as `fix(tsmd): ...`, which releases a patch; dev-only updates
+#    are `chore(tsmd): ...` and release nothing.
 # 2. The version bump, CHANGELOG and publish lock are committed to main.
 #    Pushes made with GITHUB_TOKEN don't trigger workflows, so this can't loop.
 # 3. `tegami publish` publishes to npm, then tags and creates a GitHub release.
@@ -31,7 +32,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      # pnpm comes from the packageManager field in package.json. pnpm 12 needs a
+      # newer corepack than the one bundled with Node.
+      - run: npm install -g corepack@latest && corepack enable
 
       - uses: actions/setup-node@v4
         with:

@@ -1,20 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>meesvandongen/renovate-config"],
-  "semanticCommits": "enabled",
-  "packageRules": [
-    {
-      "description": "Runtime dependency updates commit as fix(tsmd), which Tegami releases as a patch",
-      "matchDepTypes": ["dependencies"],
-      "semanticCommitType": "fix",
-      "semanticCommitScope": "tsmd"
-    },
-    {
-      "description": "Keep runtime dependencies in their own group so dev-only updates don't trigger a release",
-      "matchDepTypes": ["dependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "groupName": "non-major runtime dependencies",
-      "groupSlug": "runtime-non-major"
-    }
-  ]
+  "extends": ["github>meesvandongen/renovate-config"]
 }
