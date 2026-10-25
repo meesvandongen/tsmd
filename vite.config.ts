@@ -6,12 +6,7 @@ export default defineConfig({
     printWidth: 80,
     trailingComma: "all",
     sortPackageJson: false,
-    ignorePatterns: [
-      "dist/**",
-      "CHANGELOG.md",
-      ".changeset/**",
-      "renovate.json",
-    ],
+    ignorePatterns: ["dist/**", "CHANGELOG.md", ".tegami/**", "renovate.json"],
   },
   lint: {
     ignorePatterns: ["dist/**"],

@@ -1,35 +1,72 @@
 name: Release
 
+# Versions and publishes on every push to main, without a Version Packages PR:
+# 1. `tegami version` reads conventional commits since the last release tag.
+#    Only `feat(tsmd)` / `fix(tsmd)` style commits (scope = package name)
+#    count. The shared Renovate preset commits updates that include a runtime
+#    dependency as `fix(tsmd): ...`, which releases a patch; dev-only updates
+#    are `chore(tsmd): ...` and release nothing.
+# 2. The version bump, CHANGELOG and publish lock are committed to main.
+#    Pushes made with GITHUB_TOKEN don't trigger workflows, so this can't loop.
+# 3. `tegami publish` publishes to npm, then tags and creates a GitHub release.
+#    While the publish lock is pending, `tegami version` refuses to version
+#    again, so a failed publish is simply retried by the next run.
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # pnpm comes from the packageManager field in package.json. pnpm 12 needs a
       # newer corepack than the one bundled with Node.
       - run: npm install -g corepack@latest && corepack enable
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: pnpm run release
+      - name: Version
+        run: pnpm tegami version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Commit version bump
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(release): version packages"
+          git push
+
+      - run: pnpm run build
+
+      - name: Publish
+        run: pnpm tegami publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # npm uses trusted publishing (OIDC) when it's configured for this
+          # package on npmjs.com, and falls back to this token otherwise.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
